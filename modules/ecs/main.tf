@@ -55,10 +55,12 @@ resource "aws_ecs_task_definition" "this" {
     cpu       = var.container_cpu
     memory    = var.container_memory
     essential = true
+
     portMappings = [{
       containerPort = var.container_port
       protocol      = "tcp"
     }]
+
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -67,6 +69,25 @@ resource "aws_ecs_task_definition" "this" {
         awslogs-stream-prefix = var.container_name
       }
     }
+
+    secrets = [
+      {
+        name      = "APPLICATION_NAME"
+        valueFrom = var.ssm_application_name_arn
+      },
+      {
+        name      = "POSTGRES_JDBC"
+        valueFrom = var.ssm_postgres_jdbc_arn
+      },
+      {
+        name      = "POSTGRES_USER"
+        valueFrom = var.ssm_postgres_user_arn
+      },
+      {
+        name      = "POSTGRES_PASSWORD"
+        valueFrom = var.ssm_postgres_password_arn
+      }
+    ]
   }])
 
   tags = {

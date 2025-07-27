@@ -22,16 +22,13 @@ variable "ec2_instance_type" {
   default     = "t2.micro"
 }
 
-# variable "db_name" {
-#   default = "advdb"
-# }
+variable "postgres_user" {
+  description = "Postgres database user"
+  type        = string
+}
 
-# variable "db_username" {
-#   default = "advuser"
-# }
-
-# variable "db_password" {
-#   description = "Database password"
-#   sensitive   = true
-# }
-
+variable "postgres_password" {
+  description = "Postgres database password"
+  type        = string
+  sensitive   = true
+}

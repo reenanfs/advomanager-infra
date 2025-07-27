@@ -97,3 +97,23 @@ variable "vpc_id" {
   description = "VPC ID where RDS will be created"
   type        = string
 }
+
+variable "ssm_application_name_arn" {
+  description = "ARN of SSM parameter for APPLICATION_NAME"
+  type        = string
+}
+
+variable "ssm_postgres_jdbc_arn" {
+  description = "ARN of SSM parameter for POSTGRES_JDBC"
+  type        = string
+}
+
+variable "ssm_postgres_user_arn" {
+  description = "ARN of SSM parameter for POSTGRES_USER"
+  type        = string
+}
+
+variable "ssm_postgres_password_arn" {
+  description = "ARN of SSM parameter for POSTGRES_PASSWORD"
+  type        = string
+}

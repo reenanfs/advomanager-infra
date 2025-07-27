@@ -1,10 +1,10 @@
 resource "aws_db_subnet_group" "this" {
-  name       = "${var.name}-subnet-group"
+  name       = "${var.name}-db-subnet-group"
   subnet_ids = var.private_subnet_ids
 
-  tags = {
-    Name = "${var.name}-subnet-group"
-  }
+  tags = merge(var.tags, {
+    Name = "${var.name}-db-subnet-group"
+  })
 }
 
 resource "aws_security_group" "rds" {
@@ -13,7 +13,7 @@ resource "aws_security_group" "rds" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description     = "PostgreSQL access from ECS"
+    description     = "Allow PostgreSQL from ECS"
     from_port       = var.port
     to_port         = var.port
     protocol        = "tcp"
@@ -27,19 +27,21 @@ resource "aws_security_group" "rds" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
+  tags = merge(var.tags, {
     Name = "${var.name}-rds-sg"
-  }
+  })
 }
 
 resource "aws_db_instance" "this" {
   identifier              = "${var.name}-db"
   engine                  = var.engine
+  engine_version          = var.engine_version
   instance_class          = var.instance_class
   allocated_storage       = var.allocated_storage
   db_name                 = var.db_name
   username                = var.username
   password                = var.password
+  port                    = var.port
   db_subnet_group_name    = aws_db_subnet_group.this.name
   vpc_security_group_ids  = [aws_security_group.rds.id]
   skip_final_snapshot     = true
@@ -47,8 +49,7 @@ resource "aws_db_instance" "this" {
   multi_az                = false
   backup_retention_period = var.backup_retention_period
 
-  tags = {
-    Name = "${var.name}-rds"
-  }
+  tags = merge(var.tags, {
+    Name = "${var.name}-db"
+  })
 }
-
